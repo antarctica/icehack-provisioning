@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# Colours for output formatting
+EFBlink='\e[5m'
+EFBlinkReset='\e[25m'
+
+BGRed='\e[41m'
+BGReset='\e[49m'
+
+FGYellow='\e[33m'
+FGGreen='\e[32m'
+FGBlue='\e[34m'
+FGWhite='\e[97m'
+FGreset='\e[39m'
+
+# BAS Systems Inventory
+printf "\n"
+printf "Icehack virtual environment - version: {{ ansible_local.os_template.general.version }}\n"
+printf "\n"
+printf "Welcome!\n"
+printf "\n"
+printf "This virtual machine has been designed for Icehack, part of the Cambridge Science Festival 2016.\n"
+printf "It is designed to provide an environment with packages and tools useful for exploring and visualising scientific data.\n"
+printf "In addition to interacting with this environment through the terminal, you can also use a Jupyter notebook, which supports a number of languages.\n"
+printf "\n"
+printf "To use Jupyter, visit '${FGBlue}https://{{ os_wsr1_node.stdout }}.icehack.bas.ac.uk${FGreset}' in a web browser.\n"
+printf "\n"
+printf "For more information on what is available in this environment see: '${FGBlue}https://antarctica.hackpad.com/Icehack-Virtual-environment-RwOwX8rdVXe${FGreset}'\n"

@@ -1,0 +1,5 @@
+---
+# These variables override those defined by roles
+
+# TLS certificate
+tls_certificate: nodes-16-20.icehack.bas.ac.uk

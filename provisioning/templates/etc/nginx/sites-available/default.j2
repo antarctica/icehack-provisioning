@@ -1,0 +1,48 @@
+server {
+    listen 80 default_server deferred;
+    listen [::]:80 default_server deferred;
+
+    server_name {{ os_wsr1_node.stdout }}.icehack.bas.ac.uk;
+
+    # Redirect all HTTP requests to their HTTPS equivalent
+    # Note: A 301 redirect is 'permanent' and so this action will be cached by any server-side or client browser caches.
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl default_server deferred;
+    listen [::]:443 ssl default_server deferred;
+
+    server_name {{ os_wsr1_node.stdout }}.icehack.bas.ac.uk;
+
+    ssl_certificate      /etc/ssl/certs/{{ tls_certificate }}-certificate-including-trust-chain.crt;
+    ssl_certificate_key  /etc/ssl/private/{{ tls_certificate }}.key;
+
+    # Additional TLS/SSL options are set in /etc/nginx/snippets/tls.conf
+    include /etc/nginx/snippets/tls.conf;
+
+    # Gzip is disabled by default for secure traffic due to a vulnerability in Nginx
+    # Source: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=773332
+    gzip off;
+
+    location / {
+        proxy_pass http://jupyter;
+
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    location ~* /(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/? {
+        proxy_pass http://jupyter;
+
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        # web socket support
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+}

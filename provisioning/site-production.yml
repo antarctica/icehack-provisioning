@@ -1,0 +1,28 @@
+---
+# Setup infrastructure and application for production environment
+
+- name: setup underlying operating system for virtual environments
+  hosts: project--icehack:&env--prod:&purpose--node
+  remote_user: "{{ privileged_remote_user }}"
+  become: yes
+  roles:
+    - bas-ansible-roles-collection.system-hostname
+  tasks:
+    - include: tasks/server-setup.yml
+
+- name: setup development virtual environments and configure for use
+  hosts: project--icehack:&env--prod:&purpose--node
+  remote_user: user
+  vars:
+    ansible_ssh_pass: icehack
+  tasks:
+    - name: sync example directory
+      shell: /home/user/.local/bin/aws s3 sync s3://bas-icehack/examples /home/user/workspace/examples
+
+    - name: sync data directory
+      shell: /home/user/.local/bin/aws s3 sync s3://bas-icehack/data /home/user/workspace/data
+
+    - name: upload start notebook
+      copy:
+        src=files/Icehack-Start.ipynb
+        dest=/home/user/workspace/Icehack-Start.ipynb
