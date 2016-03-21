@@ -12,4 +12,4 @@ they do not represent any formal policy or notice
 * Follow any defined coding standards where specified, or any obvious conventions implied within the code
 
 Last updated: February 2016
-Contact address: £MAINTAINER-EMAIL (Web & Applications Team)
+Contact address: webapps@bas.ac.uk (Web & Applications Team)
